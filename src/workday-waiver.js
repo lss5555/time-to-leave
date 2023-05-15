@@ -14,7 +14,7 @@ import { getTranslationInLanguageData, translatePage } from '../renderer/i18n-tr
 
 const $ = require('jquery');
 
-const waiverStore = new Store({name: 'waived-workdays'});
+const waiverStore = new Store({ name: 'waived-workdays' });
 const hd = new Holidays();
 
 let languageData;
@@ -87,7 +87,7 @@ function addRowToListTable(day, reason, hours)
     const id = 'delete-' + day;
     delButtonCell.innerHTML = '<input class="delete-btn" data-day="' + day + '" id="' + id + '" type="button"></input>';
 
-    $('#'+ id).on('click', deleteEntryOnClick);
+    $('#' + id).on('click', deleteEntryOnClick);
 }
 
 function populateList()
@@ -113,14 +113,14 @@ function addWaiver()
     const [startYear, startMonth, startDay] = getDateFromISOStr($('#start-date').val());
     const [endYear, endMonth, endDay] = getDateFromISOStr($('#end-date').val());
 
-    const startDate = new Date(startYear, startMonth-1, startDay),
-        endDate = new Date(endYear, endMonth-1, endDay),
+    const startDate = new Date(startYear, startMonth - 1, startDay),
+        endDate = new Date(endYear, endMonth - 1, endDay),
         reason = $('#reason').val(),
         hours = $('#hours').val();
 
     if (!(validateTime(hours)))
     {
-        // The error is shown in the page, no need to handle it here
+    // The error is shown in the page, no need to handle it here
         return false;
     }
 
@@ -140,7 +140,7 @@ function addWaiver()
         const alreadyHaveWaiverStr = getTranslation('$WorkdayWaiver.already-have-waiver');
         const removeWaiverStr = getTranslation('$WorkdayWaiver.remove-waiver');
         const [tempYear, tempMonth, tempDay] = getDateFromISOStr(tempDateStr);
-        noWorkingDaysOnRange &= !showDay(tempYear, tempMonth-1, tempDay) && !waiverStore.has(tempDateStr);
+        noWorkingDaysOnRange &= !showDay(tempYear, tempMonth - 1, tempDay) && !waiverStore.has(tempDateStr);
 
         if (waiverStore.has(tempDateStr))
         {
@@ -163,9 +163,9 @@ function addWaiver()
     {
         const tempDateStr = getDateStr(tempDate);
         const [tempYear, tempMonth, tempDay] = getDateFromISOStr(tempDateStr);
-        if (showDay(tempYear, tempMonth-1, tempDay) && !waiverStore.has(tempDateStr))
+        if (showDay(tempYear, tempMonth - 1, tempDay) && !waiverStore.has(tempDateStr))
         {
-            waiverStore.set(tempDateStr, { 'reason' : reason, 'hours' : hours });
+            waiverStore.set(tempDateStr, { 'reason': reason, 'hours': hours });
             addRowToListTable(tempDateStr, reason, hours);
         }
         tempDate.setDate(tempDate.getDate() + 1);
@@ -283,7 +283,7 @@ function getHolidays()
     {
         hd.init(country, state, city);
     }
-    else if (state !== undefined && state !== '--' )
+    else if (state !== undefined && state !== '--')
     {
         hd.init(country, state);
     }
@@ -387,9 +387,10 @@ function addHolidaysAsWaiver()
     function addHoliday(holidayDate, holidayReason)
     {
         const importHoliday = $(`#import-${holidayDate}`)[0].checked;
-        if (importHoliday)
+        // Jeong : [Fix] Add constraint for catch bug(Duplicate values entered)
+        if (importHoliday && !waiverStore.get(holidayDate))
         {
-            waiverStore.set(holidayDate, { 'reason' : holidayReason, 'hours' : '08:00' });
+            waiverStore.set(holidayDate, { 'reason': holidayReason, 'hours': '08:00' });
             addRowToListTable(holidayDate, holidayReason, '08:00');
             sortTable();
         }
@@ -444,6 +445,7 @@ $(() =>
 
         $('#holiday-button').on('click', () =>
         {
+            console.log('hellow');
             addHolidaysAsWaiver();
         });
 
