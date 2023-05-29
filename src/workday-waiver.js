@@ -203,6 +203,26 @@ function deleteEntryOnClick(event)
     });
 }
 
+function deleteAllOnClick() {
+  //const deleteAllMessageStr = getTranslation('$WorkdayWaiver.*create-new-messege*)';
+  const deleteAllMessageStr = 'Are you sure? clear all?';
+
+  const options = {
+    title: 'Time to Leave',
+    message: `${deleteAllMessageStr}`,
+    type: 'info',
+    buttons: [getTranslation('$WorkdayWaiver.yes'), getTranslation('$WorkdayWaiver.no')]
+  };
+  showDialog(options, (result) => {
+    const buttonId = result.response;
+    if (buttonId !== 0) {
+      return;
+    }
+    clearWaiverList();
+    clearWaiverStore();
+  });
+}
+
 function populateCountry()
 {
     $('#country').empty();
@@ -346,8 +366,9 @@ function clearWaiverList()
     clearTable('waiver-list-table');
 }
 
-function clearWaiverStore() {
-  waiverStore.clear();
+function clearWaiverStore()
+{
+    waiverStore.clear();
 }
 
 function clearTable(id)
@@ -466,11 +487,11 @@ $(() =>
         {
             loadHolidaysTable();
         });
-      
-      $('#delete-all-button').on('click', () => {
-        clearWaiverList();
-        clearWaiverStore();
-      });
+
+        $('#delete-all-button').on('click', () =>
+        {
+            deleteAllOnClick();
+        });
 
         bindDevToolsShortcut(window);
         translatePage(languageData.language, languageData.data, 'WorkdayWaiver');
