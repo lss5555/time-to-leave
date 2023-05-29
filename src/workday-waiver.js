@@ -346,6 +346,10 @@ function clearWaiverList()
     clearTable('waiver-list-table');
 }
 
+function clearWaiverStore() {
+  waiverStore.clear();
+}
+
 function clearTable(id)
 {
     const table = $(`#${id} tbody`)[0];
@@ -462,6 +466,11 @@ $(() =>
         {
             loadHolidaysTable();
         });
+      
+      $('#delete-all-button').on('click', () => {
+        clearWaiverList();
+        clearWaiverStore();
+      });
 
         bindDevToolsShortcut(window);
         translatePage(languageData.language, languageData.data, 'WorkdayWaiver');
