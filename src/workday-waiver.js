@@ -192,7 +192,7 @@ function deleteEntryOnClick(event)
     showDialog(options, (result) =>
     {
         const buttonId = result.response;
-        if (buttonId === 1)
+        if (buttonId !== 0)
         {
             return;
         }
