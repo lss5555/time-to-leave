@@ -187,13 +187,12 @@ function deleteEntryOnClick(event)
         title: 'Time to Leave',
         message: `${deleteWaiverMessageStr} ${day} ?`,
         type: 'info',
-        buttons: ['yes', 'no'],
-        cancelId: -1
+        buttons: [getTranslation('$WorkdayWaiver.yes'), getTranslation('$WorkdayWaiver.no')]
     };
     showDialog(options, (result) =>
     {
         const buttonId = result.response;
-        if (buttonId !== 0)
+        if (buttonId === 1)
         {
             return;
         }
