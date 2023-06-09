@@ -14,6 +14,7 @@ const {
     setHours,
     toggleAddButton,
     deleteEntryOnClick,
+    deleteAllOnClick,
     populateCountry,
     populateState,
     populateCity,
@@ -197,6 +198,11 @@ describe('Test Workday Waiver Window', function()
 
     describe('Delete waiver', () =>
     {
+        beforeEach(() =>
+        {
+            prepareMockup();
+        });
+
         test('Waiver was deleted', () =>
         {
             prepareMockup();
@@ -207,6 +213,20 @@ describe('Test Workday Waiver Window', function()
                 cb({ response: 0 });
             });
             deleteEntryOnClick({target: deleteBtn});
+            const length = document.querySelectorAll('#waiver-list-table .delete-btn').length;
+            expect(length).toBe(0);
+        });
+
+        test('Waiver was all deleted', () =>
+        {
+            addTestWaiver('2020-07-16', 'some reason1');
+            addTestWaiver('2020-07-17', 'some reason2');
+            addTestWaiver('2020-07-18', 'some reason3');
+            deleteAllOnClick();
+            showDialog.mockImplementation((options, cb) =>
+            {
+                cb({ response: 0 });
+            });
             const length = document.querySelectorAll('#waiver-list-table .delete-btn').length;
             expect(length).toBe(0);
         });
