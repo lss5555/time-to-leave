@@ -15,6 +15,7 @@ import { getTranslationInLanguageData, translatePage } from '../renderer/i18n-tr
 const $ = require('jquery');
 
 const waiverStore = new Store({ name: 'waived-workdays' });
+const memoStore = new Store({ name: 'memo' });
 const hd = new Holidays();
 
 let languageData;
@@ -90,6 +91,24 @@ function addRowToListTable(day, reason, hours)
     $('#' + id).on('click', deleteEntryOnClick);
 }
 
+function addRowToMemoListTable(day, reason, hours)
+{
+    const table = $('#memo-list-table tbody')[0],
+        row = table.insertRow(0),
+        delButtonCell = row.insertCell(0),
+        dayCell = row.insertCell(1),
+        reasonCell = row.insertCell(2),
+        hoursCell = row.insertCell(3);
+
+    dayCell.innerHTML = day;
+    reasonCell.innerHTML = reason;
+    hoursCell.innerHTML = hours;
+    const id = 'delete-' + day;
+    delButtonCell.innerHTML = '<input class="delete-btn" data-day="' + day + '" id="' + id + '" type="button"></input>';
+
+    $('#' + id).on('click', deleteEntryOnClick);
+}
+
 function populateList()
 {
     clearWaiverList();
@@ -101,6 +120,19 @@ function populateList()
         addRowToListTable(date, reason, hours);
     }
     sortTable();
+}
+
+function populateMemoList()
+{
+    // clearMemoList();
+    for (const elem of memoStore)
+    {
+        const date = elem[0],
+            memo = elem[1]['memo'],
+            time = elem[1]['time'];
+        addRowToMemoListTable(date, memo, time);
+    }
+    // sortTable();
 }
 
 function getDateFromISOStr(isoStr)
@@ -223,6 +255,29 @@ function deleteAllOnClick()
         }
         clearWaiverList();
         clearWaiverStore();
+    });
+}
+
+function deleteAllMemoOnClick()
+{
+    //const deleteAllMessageStr = getTranslation('$WorkdayWaiver.*create-new-messege*)';
+    const deleteAllMessageStr = 'Are you sure? clear all?';
+
+    const options = {
+        title: 'Time to Leave',
+        message: `${deleteAllMessageStr}`,
+        type: 'info',
+        buttons: [getTranslation('$WorkdayWaiver.yes'), getTranslation('$WorkdayWaiver.no')]
+    };
+    showDialog(options, (result) =>
+    {
+        const buttonId = result.response;
+        if (buttonId !== 0)
+        {
+            return;
+        }
+        clearMemoList();
+        clearMemoStore();
     });
 }
 
@@ -369,9 +424,20 @@ function clearWaiverList()
     clearTable('waiver-list-table');
 }
 
+function clearMemoList()
+{
+    clearTable('memo-list-table');
+}
+
+
 function clearWaiverStore()
 {
     waiverStore.clear();
+}
+
+function clearMemoStore()
+{
+    memoStore.clear();
 }
 
 function clearTable(id)
@@ -394,6 +460,7 @@ function loadHolidaysTable()
 
     // Clear all rows before adding new ones
     clearHolidayTable();
+    clearMemoList();
 
     function addHoliday(holidayDate, holidayReason)
     {
@@ -429,9 +496,54 @@ function addHolidaysAsWaiver()
     showAlert(getTranslation('$WorkdayWaiver.loaded-waivers-holidays'));
 }
 
+function addMemo()
+{
+    const [startYear, startMonth, startDay] = getDateFromISOStr($('#memo-start-date').val());
+    const [endYear, endMonth, endDay] = getDateFromISOStr($('#memo-end-date').val());
+
+    const startDate = new Date(startYear, startMonth - 1, startDay),
+        endDate = new Date(endYear, endMonth - 1, endDay),
+        memo = $('#memo-content').val(),
+        time = $('#memo-time').val();
+
+    if (!(validateTime(time)))
+    {
+    // The error is shown in the page, no need to handle it here
+        return false;
+    }
+
+    const diff = diffDays(startDate, endDate);
+
+    if (diff < 0)
+    {
+        showAlert(getTranslation('$WorkdayWaiver.end-date-cannot-be-less'));
+        return false;
+    }
+
+    const tempDate = new Date(startDate);
+
+    for (let i = 0; i <= diff; i++)
+    {
+        const tempDateStr = getDateStr(tempDate);
+        const [tempYear, tempMonth, tempDay] = getDateFromISOStr(tempDateStr);
+        if (showDay(tempYear, tempMonth - 1, tempDay))
+        {
+            memoStore.set(tempDateStr, { 'memo': memo, 'time': time });
+            addRowToMemoListTable(tempDateStr, memo, time);
+        }
+        tempDate.setDate(tempDate.getDate() + 1);
+    }
+    // sortTable();
+
+    //Cleanup
+    $('#memo-content').val('');
+    toggleAddButton('memo-button', $('#memo-content').val());
+}
+
 function initializeHolidayInfo()
 {
     toggleAddButton('holiday-button', false);
+    toggleAddButton('memo-button', false);
     populateYear();
     populateCountry();
     $('#holiday-list-table').hide();
@@ -459,10 +571,16 @@ $(() =>
         toggleAddButton('waive-button', $('#reason').val());
 
         populateList();
+        populateMemoList();
 
         $('#reason, #hours').on('input blur', () =>
         {
             toggleAddButton('waive-button', $('#reason').val() && $('#hours')[0].checkValidity());
+        });
+
+        $('#memo-content, #memo-time').on('input blur', () =>
+        {
+            toggleAddButton('memo-button', $('#memo-content').val() && $('#memo-time')[0].checkValidity());
         });
 
         $('#waive-button').on('click', () =>
@@ -473,6 +591,11 @@ $(() =>
         $('#holiday-button').on('click', () =>
         {
             addHolidaysAsWaiver();
+        });
+
+        $('#memo-button').on('click', () =>
+        {
+            addMemo();
         });
 
         initializeHolidayInfo();
@@ -494,6 +617,11 @@ $(() =>
         $('#delete-all-button').on('click', () =>
         {
             deleteAllOnClick();
+        });
+
+        $('#delete-all-memo-button').on('click', () =>
+        {
+            deleteAllMemoOnClick();
         });
 
         bindDevToolsShortcut(window);
