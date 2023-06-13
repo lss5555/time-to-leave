@@ -24,7 +24,13 @@ function displayWaiverWindow(waiverDay)
     ipcRenderer.send('SET_WAIVER_DAY', waiverDay);
 }
 
+function displayVerticalWindow(arr)
+{
+    ipcRenderer.send('SET_VERTICAL_ALIGN', arr);
+}
+
 export {
     formatDayId,
-    displayWaiverWindow
+    displayWaiverWindow,
+    displayVerticalWindow
 };
