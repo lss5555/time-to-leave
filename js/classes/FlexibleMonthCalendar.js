@@ -11,7 +11,8 @@ import { getMonthLength } from '../date-aux.js';
 import { generateKey } from '../date-db-formatter.js';
 import {
     formatDayId,
-    displayWaiverWindow
+    displayWaiverWindow,
+    displayVerticalWindow
 } from '../workday-waiver-aux.js';
 import { showDialog } from '../window-aux.js';
 import { getMonthName, getDayAbbr } from '../date-to-string-util.js';
@@ -211,7 +212,7 @@ class FlexibleMonthCalendar extends BaseCalendar
         let htmlCode =
                 '<div>' +
                 `<div class="weekday waiver-trigger" title="${this._getTranslation('$FlexibleMonthCalendar.add-waiver-day')}">` + getDayAbbr(this._languageData.data, weekDay) + '</div>' +
-                '<div class="day">' +
+                '<div class="day day-trigger">' +
                     '<span class="day-number"> ' + day + ' </span>' +
                     '<img src="assets/waiver.svg" height="16" class="waiver-img">' +
                 '</div>' +
@@ -290,6 +291,41 @@ class FlexibleMonthCalendar extends BaseCalendar
             const dayId = $(this).siblings().closest('.time-cells').attr('id');
             const waiverDay = formatDayId(dayId);
             displayWaiverWindow(waiverDay);
+        });
+
+
+        $('.day-trigger').off('click').on('click', function()
+        {
+
+            const dayId = $(this).siblings().closest('.weekday').text();
+            const dateId = $(this).siblings().closest('.time-cells').attr('id');
+            const total = $(this).siblings().closest('.day-total-cell').find('.day-total span').text();
+            const arr = {
+                date : dateId,
+                day : dayId,
+                total : total,
+                time : [],
+            };
+
+            $(this).siblings().closest('.time-cells').find('.row-time').each(function()
+            {
+                const inputValue = $(this).find('input[type="time"]').val();
+                const intervalValue = $(this).find('.interval span').text();
+
+
+                if (inputValue !== '' && inputValue !== undefined)
+                {
+                    arr.time.push( {key: inputValue, value: 'time'} );
+                }
+                if (intervalValue !== '' && intervalValue.trim() !== '' &&  intervalValue !== undefined)
+                {
+                    arr.time.push( {key: intervalValue, value: 'interval'});
+                }
+
+            });
+
+            displayVerticalWindow(arr);
+
         });
     }
 
