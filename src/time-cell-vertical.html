@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html data-theme="" lang="en">
+
+<head>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- First we need to declare jQuery and $ globals with jquery -->
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js" charset="utf-8"></script>
+    <script type="module" src="time-cell-vertical.js"></script>
+</head>
+
+<body id="workday-waiver-window" class="common-window">
+    <div class="container container--lowMargin">
+        <div class="header-title">           
+            <p class="header-help" data-i18n="$WorkdayWaiver.header-help">
+                Changes take effect when closing this window</p>
+        </div>
+
+    </div>
+
+    <div id="sort-list-table-container">
+        <table id="sort-list-table">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
