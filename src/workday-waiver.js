@@ -204,24 +204,27 @@ function deleteEntryOnClick(event)
     });
 }
 
-function deleteAllOnClick() {
-  //const deleteAllMessageStr = getTranslation('$WorkdayWaiver.*create-new-messege*)';
-  const deleteAllMessageStr = 'Are you sure? clear all?';
+function deleteAllOnClick()
+{
+    //const deleteAllMessageStr = getTranslation('$WorkdayWaiver.*create-new-messege*)';
+    const deleteAllMessageStr = 'Are you sure? clear all?';
 
-  const options = {
-    title: 'Time to Leave',
-    message: `${deleteAllMessageStr}`,
-    type: 'info',
-    buttons: [getTranslation('$WorkdayWaiver.yes'), getTranslation('$WorkdayWaiver.no')]
-  };
-  showDialog(options, (result) => {
-    const buttonId = result.response;
-    if (buttonId !== 0) {
-      return;
-    }
-    clearWaiverList();
-    clearWaiverStore();
-  });
+    const options = {
+        title: 'Time to Leave',
+        message: `${deleteAllMessageStr}`,
+        type: 'info',
+        buttons: [getTranslation('$WorkdayWaiver.yes'), getTranslation('$WorkdayWaiver.no')]
+    };
+    showDialog(options, (result) =>
+    {
+        const buttonId = result.response;
+        if (buttonId !== 0)
+        {
+            return;
+        }
+        clearWaiverList();
+        clearWaiverStore();
+    });
 }
 
 function populateCountry()
