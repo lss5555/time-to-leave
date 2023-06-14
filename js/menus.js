@@ -137,6 +137,7 @@ function getEditMenuTemplate(mainWindow)
                 prefWindow.setMenu(null);
                 prefWindow.loadURL(htmlPath);
                 prefWindow.show();
+                prefWindow.setMinimumSize(480, 400);
                 prefWindow.on('close', function()
                 {
                     prefWindow = null;

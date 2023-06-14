@@ -41,6 +41,7 @@ function openWaiverManagerWindow(mainWindow, event)
     waiverWindow.setMenu(null);
     waiverWindow.loadURL(htmlPath);
     waiverWindow.show();
+    waiverWindow.setMinimumSize(480, 400);
     waiverWindow.on('close', function()
     {
         waiverWindow = null;
