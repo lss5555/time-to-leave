@@ -4,7 +4,7 @@
 const { app, ipcMain } = require('electron');
 const { createWindow, createMenu, getMainWindow, triggerStartupDialogs } = require('./js/main-window');
 const { createNotification } = require('./js/notification');
-const { openWaiverManagerWindow } = require('./js/windows.js');
+const { openWaiverManagerWindow, openVerticalManagerWindow } = require('./js/windows.js');
 const { setupI18n, getCurrentTranslation, setLanguageChangedCallback } = require('./src/configs/i18next.config.js');
 const { handleSquirrelEvent } = require('./js/squirrel.js');
 import { appConfig } from './js/app-config.js';
@@ -23,6 +23,13 @@ ipcMain.on('SET_WAIVER_DAY', (event, waiverDay) =>
     global.waiverDay = waiverDay;
     const mainWindow = getMainWindow();
     openWaiverManagerWindow(mainWindow);
+});
+
+ipcMain.on('SET_VERTICAL_ALIGN', (event, arr) =>
+{
+    global.arr = arr;
+    const mainWindow = getMainWindow();
+    openVerticalManagerWindow(mainWindow);
 });
 
 ipcMain.handle('USER_DATA_PATH', () =>

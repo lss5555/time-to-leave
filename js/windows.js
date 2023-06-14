@@ -8,6 +8,7 @@ import { getDateStr } from './date-aux.js';
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let waiverWindow = null;
+let verticalWindow = null;
 const prefWindow = null;
 const tray = null;
 const contextMenu = null;
@@ -48,6 +49,36 @@ function openWaiverManagerWindow(mainWindow, event)
     });
 }
 
+function openVerticalManagerWindow(mainWindow)
+{
+    if (verticalWindow !== null)
+    {
+        verticalWindow.show();
+        return;
+    }
+    const htmlPath = path.join('file://', __dirname, '../src/time-cell-vertical.html');
+    const dialogCoordinates = getDialogCoordinates(400, 700, mainWindow);
+    verticalWindow = new BrowserWindow({ width: 400,
+        height: 700,
+        x: dialogCoordinates.x,
+        y: dialogCoordinates.y,
+        parent: mainWindow,
+        resizable: true,
+        icon: appConfig.iconpath,
+        webPreferences: {
+            enableRemoteModule: true,
+            nodeIntegration: true
+        } });
+    verticalWindow.setMenu(null);
+    verticalWindow.loadURL(htmlPath);
+    verticalWindow.show();
+    verticalWindow.on('close', function()
+    {
+        verticalWindow = null;
+    });
+
+}
+
 /**
  * Return the x and y coordinate for a dialog window,
  * so the dialog window is centered on the TTL window.
@@ -70,5 +101,6 @@ module.exports = {
     tray,
     contextMenu,
     openWaiverManagerWindow,
+    openVerticalManagerWindow,
     getDialogCoordinates
 };
