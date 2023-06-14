@@ -213,8 +213,7 @@ function deleteEntryOnClick(event)
 {
     const deleteButton = $(event.target);
     const day = deleteButton.data('day');
-    //const deleteWaiverMessageStr = getTranslation('$WorkdayWaiver.delete-waiver-message');
-    const deleteWaiverMessageStr = 'Are you sure you want to delete waiver on day';
+    const deleteWaiverMessageStr = getTranslation('$WorkdayWaiver.delete-waiver-message');
 
     const options = {
         title: 'Time to Leave',
@@ -238,7 +237,8 @@ function deleteEntryOnClick(event)
 
 function deleteAllOnClick()
 {
-    const deleteAllMessageStr = getTranslation('$WorkdayWaiver.*create-new-messege*');
+    //const deleteAllMessageStr = getTranslation('$WorkdayWaiver.*create-new-messege*');
+    const deleteAllMessageStr = 'Are you sure? clear all?';
 
     const options = {
         title: 'Time to Leave',
