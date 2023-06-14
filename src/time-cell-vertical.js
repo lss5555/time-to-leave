@@ -1,8 +1,10 @@
 'use strict';
 
+import { applyTheme } from '../renderer/themes.js';
+
+import { getUserPreferences } from '../js/user-preferences.js';
+
 const { remote } = require('electron');
-
-
 const header_title = document.querySelector('.header-title');
 const timeArr = remote.getGlobal('arr');
 
@@ -88,3 +90,9 @@ function addRowToVerticalListTable()
 }
 
 addRowToVerticalListTable();
+
+$(() =>
+{
+    const preferences = getUserPreferences();
+    applyTheme(preferences.theme);
+});
