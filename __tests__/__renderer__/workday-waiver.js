@@ -27,7 +27,8 @@ const {
     clearWaiverList,
     loadHolidaysTable,
     initializeHolidayInfo,
-    refreshDataForTest
+    refreshDataForTest,
+    addHolidaysAsWaiver
 } = require('../../src/workday-waiver');
 import { showDialog } from '../../js/window-aux.js';
 
@@ -150,6 +151,17 @@ describe('Test Workday Waiver Window', function()
             addTestWaiver('2020-07-16', 'some reason');
             const waiver = addTestWaiver('2020-07-16', 'some reason');
             expect(waiver).toBeFalsy();
+        });
+
+        test('Waived workday list, no duplicate', () =>
+        {
+            const day = 'test day';
+            const reason =  'test reason';
+            addHolidayToList(day, reason);
+            addTestWaiver(day, reason);
+            addHolidaysAsWaiver();
+            const rowLength = $('#waiver-list-table tbody tr').length;
+            expect(rowLength).toBe(1);
         });
 
         test('Range does not contain any working day', () =>

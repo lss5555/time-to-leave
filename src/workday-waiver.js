@@ -521,5 +521,6 @@ module.exports = {
     setDates,
     setHours,
     toggleAddButton,
-    refreshDataForTest
+    refreshDataForTest,
+    addHolidaysAsWaiver
 };
