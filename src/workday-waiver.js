@@ -175,6 +175,7 @@ function addWaiver()
     //Cleanup
     $('#reason').val('');
     toggleAddButton('waive-button', $('#reason').val());
+    toggleAddButton('delete-all-button', waiverStore.size);
 }
 
 function deleteEntryOnClick(event)
@@ -200,6 +201,31 @@ function deleteEntryOnClick(event)
 
         const row = deleteButton.closest('tr');
         row.remove();
+        toggleAddButton('delete-all-button', waiverStore.size);
+    });
+}
+
+function deleteAllOnClick()
+{
+    //Need Translation;
+    const deleteAllMessageStr = 'Are you sure you delete all?';
+
+    const options = {
+        title: 'Time to Leave',
+        message: `${deleteAllMessageStr}`,
+        type: 'info',
+        buttons: [getTranslation('$WorkdayWaiver.yes'), getTranslation('$WorkdayWaiver.no')]
+    };
+    showDialog(options, (result) =>
+    {
+        const buttonId = result.response;
+        if (buttonId !== 0)
+        {
+            return;
+        }
+        clearWaiverList();
+        clearWaiverStore();
+        toggleAddButton('delete-all-button', waiverStore.size);
     });
 }
 
@@ -346,6 +372,11 @@ function clearWaiverList()
     clearTable('waiver-list-table');
 }
 
+function clearWaiverStore()
+{
+    waiverStore.clear();
+}
+
 function clearTable(id)
 {
     const table = $(`#${id} tbody`)[0];
@@ -405,6 +436,7 @@ function addHolidaysAsWaiver()
 function initializeHolidayInfo()
 {
     toggleAddButton('holiday-button', false);
+    toggleAddButton('delete-all-button', waiverStore.size);
     populateYear();
     populateCountry();
     $('#holiday-list-table').hide();
@@ -430,6 +462,7 @@ $(() =>
         setDates(remote.getGlobal('waiverDay'));
         setHours();
         toggleAddButton('waive-button', $('#reason').val());
+        toggleAddButton('delete-all-button', waiverStore.size);
 
         populateList();
 
@@ -447,6 +480,10 @@ $(() =>
         {
             console.log('hellow');
             addHolidaysAsWaiver();
+        });
+        $('#delete-all-button').on('click', () =>
+        {
+            deleteAllOnClick();
         });
 
         initializeHolidayInfo();
