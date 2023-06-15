@@ -25,6 +25,7 @@ const {
     clearHolidayTable,
     clearWaiverList,
     loadHolidaysTable,
+    addRowToMemoListTable,
     initializeHolidayInfo,
     refreshDataForTest
 } = require('../../src/workday-waiver');
@@ -444,6 +445,36 @@ describe('Test Workday Waiver Window', function()
             clearWaiverList();
             rowLength = $('#waiver-list-table tbody tr').length;
             expect(rowLength).toBe(0);
+        });
+    });
+
+    describe('add Memo to list table', () =>
+    {
+        beforeEach(() =>
+        {
+            prepareMockup();
+        });
+
+        test('In holiday, not added memo', () =>
+        {
+            const day = '2020-01-01';
+            const reason = 'test reason';
+            const Holiday = undefined;
+            const conflicts = undefined;
+            const hours = '08:00';
+            addRowToMemoListTable(day, reason, hours);
+            const table = $('memo-list-table tbody');
+            const rowsLength = table.find('tr').length;
+            expect(rowsLength).toBe(1);
+            const firstCell = table.find('td')[0].innerHTML;
+            const secondCell = table.find('td')[1].innerHTML;
+            const thirdCell = table.find('td')[2].innerHTML;
+            const fourthCell = table.find('td')[3].innerHTML;
+            fourthCellContent = `<label class="switch"><input type="checkbox" checked="${conflicts || Holiday === 'No' ? '' : 'checked'}" name="import-${day} id="import${day}"><span class="slider round"></span></label>`;
+            expect(firstCell).toBe(day);
+            expect(secondCell).toBe(reason);
+            expect(thirdCell).toBe('undefined');
+            expect(fourthCell).toEqual(fourthCellContent);
         });
     });
 });
