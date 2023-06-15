@@ -307,25 +307,32 @@ class FlexibleMonthCalendar extends BaseCalendar
                 time : [],
             };
 
-            $(this).siblings().closest('.time-cells').find('.row-time').each(function()
+            const rowTime = $(this).siblings().closest('.time-cells').find('.row-time');
+
+            let inputValue;
+            let intervalValue;
+
+            for (let i = 0; i < rowTime.length; i++)
             {
-                const inputValue = $(this).find('input[type="time"]').val();
-                const intervalValue = $(this).find('.interval span').text();
-
-
-                if (inputValue !== '' && inputValue !== undefined)
+                for (let j = 0; j < 2; j++)
                 {
-                    arr.time.push( {key: inputValue, value: 'time'} );
-                }
-                if (intervalValue !== '' && intervalValue.trim() !== '' &&  intervalValue !== undefined)
-                {
-                    arr.time.push( {key: intervalValue, value: 'interval'});
+                    inputValue = rowTime.eq(i).find('input[type="time"]').val();
+
+                    if (j === 0)
+                        arr.time.push( {key : inputValue, value: 'start'});
+                    else if (j === 1)
+                        arr.time.push( {key : inputValue, value: 'end'});
+                    i += 1;
                 }
 
-            });
+                if (rowTime.length <= i)
+                    break;
+
+                intervalValue = rowTime.eq(i).find('.interval span').text();
+                arr.time.push( {key : intervalValue, value: 'interval'});
+            }
 
             displayVerticalWindow(arr);
-
         });
     }
 
