@@ -12,80 +12,57 @@ const $ = require('jquery');
 
 header_title.textContent = timeArr['date'] + ' ' + '(' + timeArr['day'] + ')';
 
-function addRowToVerticalListTable()
+let count = 1,
+    insertRowIndex = 0;
+
+const table = $('#sort-list-table tbody')[0];
+let row = table.insertRow(insertRowIndex),
+    numberCell = row.insertCell(0),
+    startCell = row.insertCell(1),
+    endCell = row.insertCell(2);
+
+function createRowTwoCell()
 {
-    let startIndex = 0,
-        count = 1,
-        insertRowIndex = 0,
-        endIndex = 1,
-        breakIndex = 2;
-
-
-    const table = $('#sort-list-table tbody')[0];
-    let row = table.insertRow(insertRowIndex),
-        numberCell = row.insertCell(0),
-        startCell = row.insertCell(1),
-        endCell = row.insertCell(2),
-        breakTimeCell;
-
-    numberCell.innerHTML = 'order';
-    startCell.innerHTML = 'Start';
-    endCell.innerHTML = 'End';
-
     row = table.insertRow(++insertRowIndex);
     numberCell = row.insertCell(0);
-    breakTimeCell = row.insertCell(1);
-    breakTimeCell.colSpan = 2;
-    breakTimeCell.innerHTML = 'BreakTime';
+    startCell = row.insertCell(1);
+}
 
-
+function addRowToVerticalListTable()
+{
     timeArr['time'].forEach((element, index) =>
     {
 
-        if (index === startIndex)
+        if (element.value === 'start')
         {
-            row = table.insertRow(++insertRowIndex);
-            numberCell = row.insertCell(0);
-            startCell = row.insertCell(1);
-            endCell = row.insertCell(2);
+            if (index !== 0)
+            {
+                createRowTwoCell();
+                endCell = row.insertCell(2);
+            }
 
             numberCell.innerHTML = count;
             startCell.innerHTML = element.key;
             count += 1;
         }
-        else if (index === endIndex)
+        else if (element.value === 'end')
         {
             endCell.innerHTML = element.key;
-            endIndex += 3;
         }
-        else if (index === breakIndex && element.value === 'interval')
+        else if (element.value === 'interval')
         {
-            row = table.insertRow(++insertRowIndex);
-            numberCell = row.insertCell(0);
-            breakTimeCell = row.insertCell(1);
-            breakTimeCell.colSpan = 2;
-            breakTimeCell.innerHTML = element.key;
-            breakIndex += 3;
-            startIndex += 3;
+            createRowTwoCell();
+            startCell.colSpan = 2;
+            startCell.innerHTML = element.key;
         }
 
     });
 
-    row = table.insertRow(++insertRowIndex);
-    startCell = row.insertCell(0);
-    endCell = row.insertCell(1);
+    createRowTwoCell();
+    startCell.colSpan = 2;
+    numberCell.innerHTML = 'Total';
 
-    startCell.innerHTML = 'Total';
-
-    if (timeArr['total'] === '')
-    {
-        endCell.innerHTML = '?';
-    }
-    else
-    {
-        endCell.innerHTML = timeArr['total'];
-    }
-    endCell.colSpan = 2;
+    timeArr['total'] === '' ? startCell.innerHTML = '?' : startCell.innerHTML = timeArr['total'];
 
 }
 
