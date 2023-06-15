@@ -460,7 +460,6 @@ function loadHolidaysTable()
 
     // Clear all rows before adding new ones
     clearHolidayTable();
-    clearMemoList();
 
     function addHoliday(holidayDate, holidayReason)
     {
@@ -525,12 +524,8 @@ function addMemo()
     for (let i = 0; i <= diff; i++)
     {
         const tempDateStr = getDateStr(tempDate);
-        const [tempYear, tempMonth, tempDay] = getDateFromISOStr(tempDateStr);
-        if (showDay(tempYear, tempMonth - 1, tempDay))
-        {
-            memoStore.set(tempDateStr, { 'memo': memo, 'time': time });
-            addRowToMemoListTable(tempDateStr, memo, time);
-        }
+        memoStore.set(tempDateStr, { 'memo': memo, 'time': time });
+        addRowToMemoListTable(tempDateStr, memo, time);
         tempDate.setDate(tempDate.getDate() + 1);
     }
     // sortTable();
