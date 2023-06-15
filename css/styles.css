@@ -526,6 +526,7 @@ body {
 }
 
 #sort-list-table {
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0 5px;
 }
@@ -540,13 +541,9 @@ body {
   font-size: 18px;
 }
 
-#sort-list-table tr:first-child,
-#sort-list-table tr:nth-child(2) {
-  font-weight: 600;
-}
-
-#sort-list-table tr:nth-child(odd) td:first-child {
+#sort-list-table tr:nth-child(odd) td {
   text-align: center;
+  width: 80px;
 }
 
 #sort-list-table tr:nth-child(odd) td:not(:first-child) {
