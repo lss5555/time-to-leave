@@ -300,13 +300,13 @@ class FlexibleMonthCalendar extends BaseCalendar
             const dayId = $(this).siblings().closest('.weekday').text();
             const dateId = $(this).siblings().closest('.time-cells').attr('id');
             const total = $(this).siblings().closest('.day-total-cell').find('.day-total span').text();
+            const waiverDate = formatDayId(dateId);
             const arr = {
-                date : dateId,
+                date : waiverDate,
                 day : dayId,
                 total : total,
                 time : [],
             };
-
             const rowTime = $(this).siblings().closest('.time-cells').find('.row-time');
 
             let inputValue;
