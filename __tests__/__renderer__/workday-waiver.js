@@ -457,11 +457,11 @@ describe('Test Workday Waiver Window', function()
 
         test('In holiday, not added memo', () =>
         {
-            const day = '2020-01-01';
+            const day = 'test day';
             const reason = 'test reason';
             const Holiday = undefined;
             const conflicts = undefined;
-            const hours = '08:00';
+            const hours = 'test hour';
             addRowToMemoListTable(day, reason, hours);
             const table = $('memo-list-table tbody');
             const rowsLength = table.find('tr').length;
@@ -469,11 +469,11 @@ describe('Test Workday Waiver Window', function()
             const firstCell = table.find('td')[0].innerHTML;
             const secondCell = table.find('td')[1].innerHTML;
             const thirdCell = table.find('td')[2].innerHTML;
-            const fourthCell = table.find('td')[3].innerHTML;
+            const fourthCell = table.find('td')[4].innerHTML;
             fourthCellContent = `<label class="switch"><input type="checkbox" checked="${conflicts || Holiday === 'No' ? '' : 'checked'}" name="import-${day} id="import${day}"><span class="slider round"></span></label>`;
             expect(firstCell).toBe(day);
             expect(secondCell).toBe(reason);
-            expect(thirdCell).toBe('undefined');
+            expect(thirdCell).toBe(hours);
             expect(fourthCell).toEqual(fourthCellContent);
         });
     });
